@@ -20,7 +20,7 @@ A lightweight jQuery alternative for modern browsers. **Write less, do more.**
 
 ## 🚀 Demo
 
-Check out the [Interactive Demo](index.html) to see all features in action!
+Check out the [Live Demo](https://sayedabdulkarim.github.io/pluck/) to see all features in action!
 
 ## Installation
 
