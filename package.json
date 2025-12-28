@@ -3,11 +3,13 @@
   "version": "2.0.0",
   "description": "A lightweight jQuery alternative - Fast, modern DOM manipulation library",
   "main": "pluck.js",
+  "types": "pluck.d.ts",
   "unpkg": "pluck.min.js",
   "jsdelivr": "pluck.min.js",
   "files": [
     "pluck.js",
     "pluck.min.js",
+    "pluck.d.ts",
     "README.md",
     "LICENSE"
   ],
