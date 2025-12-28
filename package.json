@@ -1,0 +1,43 @@
+{
+  "name": "pluck-dom",
+  "version": "2.0.0",
+  "description": "A lightweight jQuery alternative - Fast, modern DOM manipulation library",
+  "main": "pluck.js",
+  "unpkg": "pluck.min.js",
+  "jsdelivr": "pluck.min.js",
+  "files": [
+    "pluck.js",
+    "pluck.min.js",
+    "README.md",
+    "LICENSE"
+  ],
+  "scripts": {
+    "minify": "terser pluck.js -o pluck.min.js -c -m",
+    "build": "npm run minify"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/saykarim/pluck-js.git"
+  },
+  "keywords": [
+    "jquery",
+    "jquery-alternative",
+    "dom",
+    "dom-manipulation",
+    "ajax",
+    "lightweight",
+    "vanilla-js",
+    "javascript",
+    "frontend",
+    "browser"
+  ],
+  "author": "Sayed Abdul Karim",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/saykarim/pluck-js/issues"
+  },
+  "homepage": "https://github.com/saykarim/pluck-js#readme",
+  "devDependencies": {
+    "terser": "^5.44.1"
+  }
+}

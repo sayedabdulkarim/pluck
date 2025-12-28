@@ -1,0 +1,1961 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Pluck.js - A Lightweight jQuery Alternative</title>
+  <meta name="description" content="Pluck.js is a fast, small, and feature-rich JavaScript library. Write less, do more.">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <style>
+    /* ========== THEME VARIABLES ========== */
+    :root {
+      /* Dark Theme (Default) */
+      --bg-primary: #0a0a0a;
+      --bg-secondary: #0f0f1a;
+      --bg-card: #1a1a1a;
+      --bg-input: #2d2d2d;
+      --bg-header: linear-gradient(180deg, #1a1a2e 0%, #0f0f1a 100%);
+      --bg-hero: linear-gradient(180deg, #0f0f1a 0%, #0a0a0a 100%);
+      --bg-features: #0f0f0f;
+
+      --text-primary: #e0e0e0;
+      --text-secondary: #888;
+      --text-muted: #666;
+
+      --accent-primary: #6366f1;
+      --accent-secondary: #8b5cf6;
+      --accent-gradient: linear-gradient(135deg, #6366f1, #8b5cf6);
+      --accent-hover: #5558e3;
+
+      --border-color: #333;
+      --border-light: #2a2a3e;
+
+      --success: #10b981;
+      --warning: #f59e0b;
+      --danger: #ef4444;
+
+      --code-bg: #0d0d0d;
+      --box-bg: #6366f1;
+    }
+
+    [data-theme="light"] {
+      /* Light Theme - Orange/Gray */
+      --bg-primary: #f5f5f5;
+      --bg-secondary: #ffffff;
+      --bg-card: #ffffff;
+      --bg-input: #f0f0f0;
+      --bg-header: linear-gradient(180deg, #ffffff 0%, #f8f8f8 100%);
+      --bg-hero: linear-gradient(180deg, #f8f8f8 0%, #f0f0f0 100%);
+      --bg-features: #f8f8f8;
+
+      --text-primary: #1a1a1a;
+      --text-secondary: #555;
+      --text-muted: #888;
+
+      --accent-primary: #f97316;
+      --accent-secondary: #fb923c;
+      --accent-gradient: linear-gradient(135deg, #f97316, #fb923c);
+      --accent-hover: #ea580c;
+
+      --border-color: #e0e0e0;
+      --border-light: #d0d0d0;
+
+      --success: #22c55e;
+      --warning: #f59e0b;
+      --danger: #ef4444;
+
+      --code-bg: #1a1a1a;
+      --box-bg: #f97316;
+    }
+
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    body {
+      font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+      background: var(--bg-primary);
+      color: var(--text-primary);
+      line-height: 1.6;
+      transition: background 0.3s, color 0.3s;
+    }
+
+    /* ========== HEADER ========== */
+    .header {
+      background: var(--bg-header);
+      border-bottom: 1px solid var(--border-light);
+      position: sticky;
+      top: 0;
+      z-index: 1000;
+      transition: background 0.3s;
+    }
+
+    .header-content {
+      max-width: 1200px;
+      margin: 0 auto;
+      padding: 15px 20px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+
+    .logo {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      text-decoration: none;
+    }
+
+    .logo-icon {
+      width: 40px;
+      height: 40px;
+      background: var(--accent-gradient);
+      border-radius: 10px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-weight: bold;
+      font-size: 20px;
+      color: white;
+    }
+
+    .logo-text {
+      font-size: 24px;
+      font-weight: 700;
+      color: var(--text-primary);
+    }
+
+    .logo-text span {
+      color: var(--accent-primary);
+    }
+
+    .nav {
+      display: flex;
+      gap: 20px;
+      align-items: center;
+    }
+
+    .nav a {
+      color: var(--text-secondary);
+      text-decoration: none;
+      font-size: 14px;
+      font-weight: 500;
+      transition: color 0.2s;
+    }
+
+    .nav a:hover {
+      color: var(--text-primary);
+    }
+
+    .nav-btn {
+      background: var(--accent-primary);
+      color: white !important;
+      padding: 8px 16px;
+      border-radius: 6px;
+      font-weight: 600;
+    }
+
+    .nav-btn:hover {
+      background: var(--accent-hover);
+    }
+
+    /* ========== THEME TOGGLE ========== */
+    .theme-toggle {
+      background: var(--bg-input);
+      border: 1px solid var(--border-color);
+      border-radius: 50%;
+      width: 40px;
+      height: 40px;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 18px;
+      transition: all 0.3s;
+    }
+
+    .theme-toggle:hover {
+      background: var(--accent-primary);
+      border-color: var(--accent-primary);
+    }
+
+    /* ========== HERO ========== */
+    .hero {
+      background: var(--bg-hero);
+      padding: 80px 20px;
+      text-align: center;
+      transition: background 0.3s;
+    }
+
+    .hero-badge {
+      display: inline-block;
+      background: rgba(99, 102, 241, 0.15);
+      color: var(--accent-secondary);
+      padding: 6px 14px;
+      border-radius: 20px;
+      font-size: 13px;
+      font-weight: 500;
+      margin-bottom: 20px;
+      border: 1px solid rgba(99, 102, 241, 0.3);
+    }
+
+    [data-theme="light"] .hero-badge {
+      background: rgba(249, 115, 22, 0.15);
+      border-color: rgba(249, 115, 22, 0.3);
+    }
+
+    .hero h1 {
+      font-size: 52px;
+      font-weight: 700;
+      color: var(--text-primary);
+      margin-bottom: 15px;
+      line-height: 1.2;
+    }
+
+    .hero h1 span {
+      background: var(--accent-gradient);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+    }
+
+    .hero-tagline {
+      font-size: 20px;
+      color: var(--text-secondary);
+      margin-bottom: 40px;
+      font-weight: 400;
+    }
+
+    .hero-buttons {
+      display: flex;
+      gap: 15px;
+      justify-content: center;
+      margin-bottom: 50px;
+    }
+
+    .btn-primary {
+      background: var(--accent-gradient);
+      color: white;
+      padding: 14px 28px;
+      border-radius: 8px;
+      font-size: 16px;
+      font-weight: 600;
+      text-decoration: none;
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      transition: transform 0.2s, box-shadow 0.2s;
+    }
+
+    .btn-primary:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 10px 30px rgba(249, 115, 22, 0.3);
+    }
+
+    .btn-secondary {
+      background: var(--bg-card);
+      color: var(--text-primary);
+      padding: 14px 28px;
+      border-radius: 8px;
+      font-size: 16px;
+      font-weight: 600;
+      text-decoration: none;
+      border: 1px solid var(--border-color);
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      transition: all 0.2s;
+    }
+
+    .btn-secondary:hover {
+      background: #252540;
+      border-color: #6366f1;
+    }
+
+    .hero-code {
+      background: #111;
+      border: 1px solid #2a2a3e;
+      border-radius: 12px;
+      padding: 20px 30px;
+      display: inline-block;
+      font-family: 'Monaco', 'Menlo', monospace;
+      font-size: 14px;
+      color: #10b981;
+      margin-bottom: 30px;
+    }
+
+    .hero-code span {
+      color: #6366f1;
+    }
+
+    /* ========== FEATURES ========== */
+    .features {
+      background: var(--bg-features);
+      padding: 80px 20px;
+      border-top: 1px solid var(--border-light);
+      transition: background 0.3s;
+    }
+
+    .features-grid {
+      max-width: 1000px;
+      margin: 0 auto;
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 40px;
+    }
+
+    .feature-card {
+      text-align: center;
+      padding: 30px;
+    }
+
+    .feature-icon {
+      width: 80px;
+      height: 80px;
+      margin: 0 auto 20px;
+      background: linear-gradient(135deg, rgba(99, 102, 241, 0.1), rgba(139, 92, 246, 0.1));
+      border-radius: 20px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 36px;
+    }
+
+    [data-theme="light"] .feature-icon {
+      background: linear-gradient(135deg, rgba(249, 115, 22, 0.1), rgba(251, 146, 60, 0.1));
+    }
+
+    .feature-card h3 {
+      color: var(--text-primary);
+      font-size: 18px;
+      margin-bottom: 10px;
+    }
+
+    .feature-card p {
+      color: var(--text-secondary);
+      font-size: 14px;
+      line-height: 1.6;
+    }
+
+    /* ========== INSTALL SECTION ========== */
+    .install-section {
+      background: var(--bg-secondary);
+      padding: 60px 20px;
+      text-align: center;
+      transition: background 0.3s;
+    }
+
+    .install-section h2 {
+      color: var(--text-primary);
+      font-size: 32px;
+      margin-bottom: 30px;
+    }
+
+    .install-tabs {
+      display: flex;
+      justify-content: center;
+      gap: 10px;
+      margin-bottom: 20px;
+    }
+
+    .install-tab {
+      background: var(--bg-input);
+      color: var(--text-secondary);
+      padding: 10px 20px;
+      border-radius: 6px;
+      border: none;
+      cursor: pointer;
+      font-size: 14px;
+      transition: all 0.2s;
+    }
+
+    .install-tab.active {
+      background: var(--accent-primary);
+      color: white;
+    }
+
+    .install-code {
+      background: var(--code-bg);
+      border: 1px solid var(--border-light);
+      border-radius: 12px;
+      padding: 25px;
+      max-width: 700px;
+      margin: 0 auto;
+      text-align: left;
+      font-family: 'Monaco', 'Menlo', monospace;
+      font-size: 14px;
+      color: var(--text-primary);
+      position: relative;
+    }
+
+    [data-theme="light"] .install-code {
+      color: #e0e0e0;
+    }
+
+    .install-code .comment {
+      color: var(--text-muted);
+    }
+
+    .install-code .string {
+      color: var(--success);
+    }
+
+    .copy-btn {
+      position: absolute;
+      top: 15px;
+      right: 15px;
+      background: var(--bg-input);
+      color: var(--text-secondary);
+      border: none;
+      padding: 6px 12px;
+      border-radius: 4px;
+      cursor: pointer;
+      font-size: 12px;
+    }
+
+    .copy-btn:hover {
+      background: var(--accent-primary);
+      color: white;
+    }
+
+    /* ========== DEMO SECTION HEADER ========== */
+    .demo-header {
+      background: var(--bg-primary);
+      padding: 60px 20px 30px;
+      text-align: center;
+      border-top: 1px solid var(--border-light);
+      transition: background 0.3s;
+    }
+
+    .demo-header h2 {
+      color: var(--text-primary);
+      font-size: 32px;
+      margin-bottom: 10px;
+    }
+
+    .demo-header p {
+      color: var(--text-secondary);
+    }
+
+    /* ========== MAIN CONTAINER ========== */
+    .container {
+      max-width: 1200px;
+      margin: 0 auto;
+      padding: 0 20px 40px;
+    }
+
+    h1 {
+      color: var(--accent-primary);
+      margin-bottom: 10px;
+    }
+
+    h2 {
+      color: var(--accent-secondary);
+      margin: 30px 0 15px;
+      padding-bottom: 5px;
+      border-bottom: 1px solid var(--border-color);
+    }
+
+    @media (max-width: 768px) {
+      .hero h1 { font-size: 32px; }
+      .features-grid { grid-template-columns: 1fr; }
+      .nav { gap: 10px; }
+      .nav a:not(.nav-btn):not(.theme-toggle) { display: none; }
+      .hero-buttons { flex-direction: column; align-items: center; }
+    }
+
+    .demo-section {
+      background: var(--bg-card);
+      border: 1px solid var(--border-color);
+      border-radius: 8px;
+      padding: 20px;
+      margin-bottom: 20px;
+      transition: background 0.3s, border-color 0.3s;
+    }
+
+    .demo-title {
+      color: var(--success);
+      font-size: 14px;
+      margin-bottom: 10px;
+    }
+
+    .demo-box {
+      background: var(--bg-input);
+      padding: 15px;
+      border-radius: 6px;
+      margin: 10px 0;
+    }
+
+    .box {
+      background: var(--box-bg);
+      color: white;
+      padding: 20px;
+      margin: 10px 0;
+      border-radius: 6px;
+      transition: all 0.3s;
+    }
+
+    .box.active {
+      background: var(--success);
+    }
+
+    .box.highlight {
+      box-shadow: 0 0 20px rgba(99, 102, 241, 0.5);
+    }
+
+    [data-theme="light"] .box.highlight {
+      box-shadow: 0 0 20px rgba(249, 115, 22, 0.5);
+    }
+
+    button {
+      background: var(--accent-primary);
+      color: white;
+      border: none;
+      padding: 10px 20px;
+      border-radius: 6px;
+      cursor: pointer;
+      margin: 5px;
+      font-size: 14px;
+      transition: all 0.2s;
+    }
+
+    button:hover {
+      background: var(--accent-hover);
+      transform: translateY(-1px);
+    }
+
+    button.secondary {
+      background: var(--bg-input);
+      color: var(--text-primary);
+    }
+
+    button.secondary:hover {
+      background: var(--border-color);
+    }
+
+    button.success {
+      background: var(--success);
+    }
+
+    button.warning {
+      background: var(--warning);
+    }
+
+    button.danger {
+      background: var(--danger);
+    }
+
+    .output {
+      background: var(--code-bg);
+      border: 1px solid var(--border-color);
+      border-radius: 6px;
+      padding: 15px;
+      margin-top: 10px;
+      font-family: monospace;
+      font-size: 13px;
+      white-space: pre-wrap;
+      color: var(--success);
+      min-height: 50px;
+      max-height: 200px;
+      overflow-y: auto;
+    }
+
+    input, textarea, select {
+      background: var(--bg-input);
+      border: 1px solid var(--border-color);
+      border-radius: 6px;
+      padding: 10px;
+      color: var(--text-primary);
+      width: 100%;
+      margin: 5px 0;
+    }
+
+    input:focus, textarea:focus, select:focus {
+      outline: none;
+      border-color: var(--accent-primary);
+    }
+
+    .list-item {
+      background: var(--bg-input);
+      padding: 10px 15px;
+      margin: 5px 0;
+      border-radius: 4px;
+      border-left: 3px solid var(--accent-primary);
+    }
+
+    .fade-box {
+      background: linear-gradient(135deg, #6366f1, #8b5cf6);
+      padding: 30px;
+      text-align: center;
+      border-radius: 8px;
+      margin: 10px 0;
+    }
+
+    .slide-box {
+      background: #10b981;
+      padding: 20px;
+      border-radius: 8px;
+      margin: 10px 0;
+      overflow: hidden;
+    }
+
+    .animate-box {
+      background: #f59e0b;
+      width: 100px;
+      height: 100px;
+      border-radius: 8px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-weight: bold;
+    }
+
+    .grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+      gap: 20px;
+    }
+
+    .nested-demo {
+      padding: 10px;
+      border: 1px dashed #444;
+      margin: 5px;
+    }
+
+    .parent {
+      background: #374151;
+      padding: 15px;
+      border-radius: 6px;
+    }
+
+    .child {
+      background: #4b5563;
+      padding: 10px;
+      margin: 5px;
+      border-radius: 4px;
+    }
+
+    .sibling {
+      background: #6366f1;
+      padding: 10px;
+      margin: 5px;
+      border-radius: 4px;
+    }
+
+    .tag {
+      display: inline-block;
+      background: #6366f1;
+      color: white;
+      padding: 2px 8px;
+      border-radius: 4px;
+      font-size: 12px;
+      margin: 2px;
+    }
+
+    .tag.new {
+      background: #10b981;
+    }
+
+    .progress-bar {
+      width: 100%;
+      height: 20px;
+      background: #2d2d2d;
+      border-radius: 10px;
+      overflow: hidden;
+      margin: 10px 0;
+    }
+
+    .progress-bar-fill {
+      height: 100%;
+      background: linear-gradient(90deg, #6366f1, #8b5cf6);
+      width: 0%;
+      transition: width 0.3s;
+    }
+
+    .queue-item {
+      display: inline-block;
+      background: #6366f1;
+      color: white;
+      padding: 5px 10px;
+      margin: 2px;
+      border-radius: 4px;
+      font-size: 12px;
+    }
+
+    .queue-item.done {
+      background: #10b981;
+    }
+
+    .queue-item.active {
+      background: #f59e0b;
+      animation: pulse 0.5s infinite;
+    }
+
+    @keyframes pulse {
+      0%, 100% { transform: scale(1); }
+      50% { transform: scale(1.1); }
+    }
+
+    .filter-demo-item {
+      display: inline-block;
+      padding: 10px 15px;
+      margin: 5px;
+      border-radius: 6px;
+      background: #374151;
+    }
+
+    .filter-demo-item.matched {
+      background: #10b981;
+    }
+
+    .hidden-item {
+      display: none;
+    }
+
+    .toc {
+      background: #1a1a1a;
+      padding: 20px;
+      border-radius: 8px;
+      margin-bottom: 30px;
+    }
+
+    .toc a {
+      color: #6366f1;
+      text-decoration: none;
+      display: inline-block;
+      margin: 5px 15px 5px 0;
+    }
+
+    .toc a:hover {
+      text-decoration: underline;
+    }
+
+    footer {
+      text-align: center;
+      padding: 30px;
+      color: #666;
+      margin-top: 50px;
+    }
+
+    footer a {
+      color: #6366f1;
+      text-decoration: none;
+    }
+
+    .code-block {
+      background: #0d0d0d;
+      padding: 15px;
+      border-radius: 6px;
+      margin: 10px 0;
+      font-family: monospace;
+      font-size: 12px;
+      color: #10b981;
+      overflow-x: auto;
+    }
+  </style>
+</head>
+<body>
+
+  <!-- ========== HEADER ========== -->
+  <header class="header">
+    <div class="header-content">
+      <a href="#" class="logo">
+        <div class="logo-icon">P</div>
+        <div class="logo-text">Pluck<span>.js</span></div>
+      </a>
+      <nav class="nav">
+        <a href="#demos">Demos</a>
+        <a href="https://github.com/saykarim/pluck-js" target="_blank">GitHub</a>
+        <a href="README.md">Docs</a>
+        <button class="theme-toggle" onclick="toggleTheme()" title="Toggle theme">
+          <span id="theme-icon">🌙</span>
+        </button>
+        <a href="#install" class="nav-btn">Download v2.0</a>
+      </nav>
+    </div>
+  </header>
+
+  <!-- ========== HERO ========== -->
+  <section class="hero">
+    <div class="hero-badge">v2.0.0 — Now with AJAX, Deferred & More!</div>
+    <h1>Write less, <span>do more.</span></h1>
+    <p class="hero-tagline">A fast, lightweight jQuery alternative for modern browsers.<br>100% API compatible. Zero dependencies. ~41KB minified.</p>
+
+    <div class="hero-code">
+      <span>p</span>('.button').<span>addClass</span>('active').<span>fadeIn</span>();
+    </div>
+
+    <div class="hero-buttons">
+      <a href="#install" class="btn-primary">
+        <svg width="20" height="20" fill="currentColor" viewBox="0 0 24 24"><path d="M12 16l-6-6h4V4h4v6h4l-6 6zm-6 4h12v-2H6v2z"/></svg>
+        Download Pluck.js
+      </a>
+      <a href="#demos" class="btn-secondary">
+        <svg width="20" height="20" fill="currentColor" viewBox="0 0 24 24"><path d="M8 5v14l11-7z"/></svg>
+        View Demos
+      </a>
+    </div>
+  </section>
+
+  <!-- ========== FEATURES ========== -->
+  <section class="features">
+    <div class="features-grid">
+      <div class="feature-card">
+        <div class="feature-icon">⚡</div>
+        <h3>Lightweight</h3>
+        <p>Only ~41KB minified & gzipped. Can be included via CDN or npm. No dependencies.</p>
+      </div>
+      <div class="feature-card">
+        <div class="feature-icon">🎯</div>
+        <h3>jQuery Compatible</h3>
+        <p>100% API compatible with jQuery. Drop-in replacement for existing projects.</p>
+      </div>
+      <div class="feature-card">
+        <div class="feature-icon">🌐</div>
+        <h3>Modern Browsers</h3>
+        <p>Works on Chrome, Firefox, Safari, Edge, and all modern browsers.</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- ========== INSTALL ========== -->
+  <section class="install-section" id="install">
+    <h2>Quick Installation</h2>
+    <div class="install-tabs">
+      <button class="install-tab active" onclick="showInstall('cdn')">CDN</button>
+      <button class="install-tab" onclick="showInstall('npm')">npm</button>
+      <button class="install-tab" onclick="showInstall('download')">Download</button>
+    </div>
+    <div class="install-code" id="install-cdn">
+      <button class="copy-btn" onclick="copyCode()">Copy</button>
+      <span class="comment">&lt;!-- Add to your HTML --&gt;</span><br>
+      &lt;script src="<span class="string">https://cdn.jsdelivr.net/npm/pluck-dom@2.0.0/pluck.min.js</span>"&gt;&lt;/script&gt;
+    </div>
+    <div class="install-code" id="install-npm" style="display: none;">
+      <button class="copy-btn" onclick="copyCode()">Copy</button>
+      <span class="comment"># Install via npm</span><br>
+      npm install <span class="string">pluck-dom</span><br><br>
+      <span class="comment">// Import in your project</span><br>
+      import pluck from '<span class="string">pluck-dom</span>';
+    </div>
+    <div class="install-code" id="install-download" style="display: none;">
+      <button class="copy-btn" onclick="copyCode()">Copy</button>
+      <span class="comment">&lt;!-- Download and include locally --&gt;</span><br>
+      &lt;script src="<span class="string">pluck.min.js</span>"&gt;&lt;/script&gt;
+    </div>
+  </section>
+
+  <!-- ========== DEMO SECTION ========== -->
+  <section class="demo-header" id="demos">
+    <h2>Interactive Demos</h2>
+    <p>Try all Pluck.js features below. Click buttons to see them in action.</p>
+  </section>
+
+  <div class="container">
+    <!-- Table of Contents -->
+    <div class="toc">
+      <strong style="color: #10b981;">Quick Navigation:</strong><br>
+      <a href="#selection">1. Selection</a>
+      <a href="#dom">2. DOM Manipulation</a>
+      <a href="#css">3. CSS & Classes</a>
+      <a href="#traverse">4. Traversing</a>
+      <a href="#events">5. Events</a>
+      <a href="#effects">6. Effects</a>
+      <a href="#attrs">7. Attributes</a>
+      <a href="#dims">8. Dimensions</a>
+      <a href="#forms">9. Forms</a>
+      <a href="#ajax">10. AJAX <span class="tag new">NEW</span></a>
+      <a href="#deferred">11. Deferred <span class="tag new">NEW</span></a>
+      <a href="#callbacks">12. Callbacks <span class="tag new">NEW</span></a>
+      <a href="#queue">13. Queue <span class="tag new">NEW</span></a>
+      <a href="#selectors">14. Custom Selectors <span class="tag new">NEW</span></a>
+      <a href="#utilities">15. Utilities</a>
+    </div>
+
+    <!-- 1. Selection & Basic -->
+    <h2 id="selection">1. Selection & Basic Methods</h2>
+    <div class="demo-section">
+      <div class="demo-title">Select elements and manipulate them</div>
+      <div class="demo-box">
+        <div class="box" id="box1">Box 1</div>
+        <div class="box" id="box2">Box 2</div>
+        <div class="box" id="box3">Box 3</div>
+      </div>
+      <button onclick="selectDemo1()">Add 'active' class to all</button>
+      <button onclick="selectDemo2()">Toggle 'highlight' on #box2</button>
+      <button onclick="selectDemo3()">Change text of first box</button>
+      <button onclick="selectDemo4()" class="secondary">Reset</button>
+      <div class="output" id="select-output">Click a button to see the result...</div>
+    </div>
+
+    <!-- 2. DOM Manipulation -->
+    <h2 id="dom">2. DOM Manipulation</h2>
+    <div class="demo-section">
+      <div class="demo-title">append, prepend, before, after, remove, clone, wrap</div>
+      <div class="demo-box" id="dom-container">
+        <div class="list-item" id="item1">Item 1</div>
+        <div class="list-item" id="item2">Item 2</div>
+        <div class="list-item" id="item3">Item 3</div>
+      </div>
+      <button onclick="domDemo1()">Append</button>
+      <button onclick="domDemo2()">Prepend</button>
+      <button onclick="domDemo3()">Before Item 2</button>
+      <button onclick="domDemo4()">Clone Item 1</button>
+      <button onclick="domDemo5()">Remove last</button>
+      <button onclick="domDemo7()">Wrap all</button>
+      <button onclick="domDemo6()" class="secondary">Reset</button>
+    </div>
+
+    <!-- 3. CSS & Classes -->
+    <h2 id="css">3. CSS & Classes</h2>
+    <div class="demo-section">
+      <div class="demo-title">css(), addClass(), removeClass(), toggleClass()</div>
+      <div class="demo-box">
+        <div class="box" id="style-box">Style me!</div>
+      </div>
+      <button onclick="cssDemo1()">Change background</button>
+      <button onclick="cssDemo2()">Add border radius</button>
+      <button onclick="cssDemo3()">Set multiple styles</button>
+      <button onclick="cssDemo4()">Get computed style</button>
+      <button onclick="cssDemo5()" class="secondary">Reset</button>
+      <div class="output" id="css-output"></div>
+    </div>
+
+    <!-- 4. Traversing -->
+    <h2 id="traverse">4. Traversing</h2>
+    <div class="demo-section">
+      <div class="demo-title">parent(), children(), siblings(), find(), closest(), next(), prev()</div>
+      <div class="demo-box">
+        <div class="parent" id="traverse-parent">
+          Parent
+          <div class="child" id="child1">Child 1</div>
+          <div class="child" id="child2">
+            Child 2
+            <span class="grandchild">Grandchild</span>
+          </div>
+          <div class="child" id="child3">Child 3</div>
+        </div>
+        <div class="sibling">Sibling 1</div>
+        <div class="sibling">Sibling 2</div>
+      </div>
+      <button onclick="traverseDemo1()">Get children</button>
+      <button onclick="traverseDemo2()">Get parent</button>
+      <button onclick="traverseDemo3()">Find grandchild</button>
+      <button onclick="traverseDemo4()">Get siblings</button>
+      <button onclick="traverseDemo5()">Closest parent</button>
+      <button onclick="traverseDemo6()">next()/prev()</button>
+      <div class="output" id="traverse-output"></div>
+    </div>
+
+    <!-- 5. Events -->
+    <h2 id="events">5. Events</h2>
+    <div class="demo-section">
+      <div class="demo-title">on(), off(), one(), trigger(), bind(), delegate()</div>
+      <div class="demo-box">
+        <button id="event-btn1">Click me!</button>
+        <button id="event-btn2">Hover me!</button>
+        <button id="event-btn3">One-time click</button>
+        <input type="text" id="event-input" placeholder="Type something...">
+      </div>
+      <button onclick="eventDemo1()">Attach click</button>
+      <button onclick="eventDemo2()">Attach hover</button>
+      <button onclick="eventDemo3()">Attach ONE</button>
+      <button onclick="eventDemo4()">Trigger click</button>
+      <button onclick="eventDemo5()" class="danger">Remove all</button>
+      <div class="output" id="event-log">Event log will appear here...</div>
+    </div>
+
+    <!-- 6. Effects -->
+    <h2 id="effects">6. Effects</h2>
+    <div class="grid">
+      <div class="demo-section">
+        <div class="demo-title">show(), hide(), toggle()</div>
+        <div class="demo-box">
+          <div class="box" id="show-hide-box">Show/Hide Box</div>
+        </div>
+        <button onclick="effectDemo1()">Hide</button>
+        <button onclick="effectDemo2()">Show</button>
+        <button onclick="effectDemo3()">Toggle</button>
+        <button onclick="effectDemo4()">Animated Hide</button>
+        <button onclick="effectDemo5()">Animated Show</button>
+      </div>
+
+      <div class="demo-section">
+        <div class="demo-title">fadeIn(), fadeOut(), fadeToggle(), fadeTo()</div>
+        <div class="demo-box">
+          <div class="fade-box" id="fade-box">Fade Box</div>
+        </div>
+        <button onclick="fadeDemo1()">Fade Out</button>
+        <button onclick="fadeDemo2()">Fade In</button>
+        <button onclick="fadeDemo3()">Fade Toggle</button>
+        <button onclick="fadeDemo4()">Fade To 50%</button>
+      </div>
+
+      <div class="demo-section">
+        <div class="demo-title">slideUp(), slideDown(), slideToggle()</div>
+        <div class="demo-box">
+          <div class="slide-box" id="slide-box">
+            <p>Slide content here!</p>
+          </div>
+        </div>
+        <button onclick="slideDemo1()">Slide Up</button>
+        <button onclick="slideDemo2()">Slide Down</button>
+        <button onclick="slideDemo3()">Slide Toggle</button>
+      </div>
+
+      <div class="demo-section">
+        <div class="demo-title">animate(), stop(), finish()</div>
+        <div class="demo-box" style="height: 150px; position: relative;">
+          <div class="animate-box" id="animate-box" style="position: absolute; left: 0;">Move</div>
+        </div>
+        <button onclick="animateDemo1()">Move Right</button>
+        <button onclick="animateDemo2()">Move & Resize</button>
+        <button onclick="animateDemo4()">Stop</button>
+        <button onclick="animateDemo3()" class="secondary">Reset</button>
+      </div>
+    </div>
+
+    <!-- 7. Attributes & Data -->
+    <h2 id="attrs">7. Attributes & Data</h2>
+    <div class="demo-section">
+      <div class="demo-title">attr(), prop(), data(), removeData(), val()</div>
+      <div class="demo-box">
+        <input type="text" id="attr-input" placeholder="Input field" data-info="test data" data-count="42">
+        <input type="checkbox" id="attr-checkbox"> Check me
+      </div>
+      <button onclick="attrDemo1()">Get data-info</button>
+      <button onclick="attrDemo2()">Set attribute</button>
+      <button onclick="attrDemo3()">Get checkbox prop</button>
+      <button onclick="attrDemo4()">Set value</button>
+      <button onclick="attrDemo5()">Store object data</button>
+      <button onclick="attrDemo6()">Get all data</button>
+      <div class="output" id="attr-output"></div>
+    </div>
+
+    <!-- 8. Dimensions -->
+    <h2 id="dims">8. Dimensions & Position</h2>
+    <div class="demo-section">
+      <div class="demo-title">width(), height(), offset(), position(), scrollTop()</div>
+      <div class="demo-box" style="position: relative; height: 200px; overflow: auto;" id="scroll-container">
+        <div class="box" id="dimension-box" style="width: 150px; height: 100px; position: absolute; top: 20px; left: 30px;">
+          Measure me!
+        </div>
+        <div style="height: 400px;"></div>
+      </div>
+      <button onclick="dimDemo1()">Get dimensions</button>
+      <button onclick="dimDemo2()">Get offset</button>
+      <button onclick="dimDemo3()">Get position</button>
+      <button onclick="dimDemo4()">Outer dimensions</button>
+      <button onclick="dimDemo5()">Scroll to 100</button>
+      <div class="output" id="dim-output"></div>
+    </div>
+
+    <!-- 9. Form -->
+    <h2 id="forms">9. Form Serialization</h2>
+    <div class="demo-section">
+      <div class="demo-title">serialize(), serializeArray(), val()</div>
+      <form id="demo-form">
+        <input type="text" name="username" placeholder="Username" value="john_doe">
+        <input type="email" name="email" placeholder="Email" value="john@example.com">
+        <textarea name="message" placeholder="Message">Hello World!</textarea>
+        <select name="country">
+          <option value="in">India</option>
+          <option value="us" selected>USA</option>
+          <option value="uk">UK</option>
+        </select>
+      </form>
+      <button onclick="formDemo1()">Serialize</button>
+      <button onclick="formDemo2()">Serialize Array</button>
+      <button onclick="formDemo3()">Get all values</button>
+      <div class="output" id="form-output"></div>
+    </div>
+
+    <!-- 10. AJAX (NEW) -->
+    <h2 id="ajax">10. AJAX <span class="tag new">NEW in v2.0</span></h2>
+    <div class="demo-section">
+      <div class="demo-title">pluck.ajax(), pluck.get(), pluck.post(), pluck.getJSON(), pluck.getScript(), .load()</div>
+
+      <div class="demo-box">
+        <h4 style="color: #10b981; margin-bottom: 10px;">How AJAX Works</h4>
+        <p style="color: #888; font-size: 13px;">AJAX = Asynchronous JavaScript And XML. Server se data fetch karta hai bina page reload kiye.</p>
+      </div>
+
+      <div class="grid" style="grid-template-columns: repeat(auto-fit, minmax(180px, 1fr)); gap: 10px;">
+        <button onclick="ajaxDemo1()">pluck.ajax() - GET</button>
+        <button onclick="ajaxDemo2()">pluck.get()</button>
+        <button onclick="ajaxDemo3()">pluck.post()</button>
+        <button onclick="ajaxDemo4()">pluck.getJSON()</button>
+        <button onclick="ajaxDemo5()">.load() - Load HTML</button>
+        <button onclick="ajaxDemo6()">ajaxSetup</button>
+      </div>
+
+      <div class="output" id="ajax-output" style="margin-top: 15px;">Click a button to test AJAX...</div>
+
+      <div class="code-block" style="margin-top: 15px;">
+// pluck.ajax() - Full control
+pluck.ajax({
+  url: 'https://jsonplaceholder.typicode.com/posts/1',
+  method: 'GET',
+  dataType: 'json',
+  success: function(data) { console.log(data); },
+  error: function(xhr, status, err) { console.log(err); }
+});
+
+// pluck.get() - Simple GET request
+pluck.get('/api/users', function(data) {
+  console.log(data);
+});
+
+// pluck.post() - POST with data
+pluck.post('/api/users', { name: 'John' }, function(response) {
+  console.log(response);
+});
+
+// pluck.getJSON() - GET JSON directly
+pluck.getJSON('/api/data.json', function(json) {
+  console.log(json);
+});
+
+// .load() - Load HTML into element
+p('#container').load('/partial.html');
+
+// AJAX with Deferred/Promise pattern
+pluck.ajax({ url: '/api/data' })
+  .done(function(data) { console.log('Success:', data); })
+  .fail(function(err) { console.log('Error:', err); })
+  .always(function() { console.log('Complete!'); });</div>
+    </div>
+
+    <!-- 11. Deferred (NEW) -->
+    <h2 id="deferred">11. Deferred Object <span class="tag new">NEW in v2.0</span></h2>
+    <div class="demo-section">
+      <div class="demo-title">pluck.Deferred(), .done(), .fail(), .always(), .then(), pluck.when()</div>
+      <div class="demo-box">
+        <div class="progress-bar">
+          <div class="progress-bar-fill" id="deferred-progress"></div>
+        </div>
+        <div id="deferred-status" style="text-align: center; padding: 10px;">Ready to start...</div>
+      </div>
+      <button onclick="deferredDemo1()" class="success">Create & Resolve</button>
+      <button onclick="deferredDemo2()" class="danger">Create & Reject</button>
+      <button onclick="deferredDemo3()">With Progress</button>
+      <button onclick="deferredDemo4()">pluck.when() - Multiple</button>
+      <button onclick="deferredDemo5()">Promise Chain (.then)</button>
+      <div class="output" id="deferred-output"></div>
+      <div class="code-block">
+const deferred = pluck.Deferred();
+deferred.done(fn).fail(fn).always(fn);
+deferred.resolve('success') or deferred.reject('error');
+pluck.when(d1, d2, d3).done(fn);</div>
+    </div>
+
+    <!-- 12. Callbacks (NEW) -->
+    <h2 id="callbacks">12. Callbacks Object <span class="tag new">NEW in v2.0</span></h2>
+    <div class="demo-section">
+      <div class="demo-title">pluck.Callbacks(), .add(), .fire(), .remove(), flags: once, memory, unique</div>
+      <div class="demo-box">
+        <div id="callbacks-list" style="min-height: 50px;">Callbacks will execute here...</div>
+      </div>
+      <button onclick="callbacksDemo1()">Create & Add</button>
+      <button onclick="callbacksDemo2()">Fire callbacks</button>
+      <button onclick="callbacksDemo3()">Fire with args</button>
+      <button onclick="callbacksDemo4()">Once flag</button>
+      <button onclick="callbacksDemo5()">Memory flag</button>
+      <button onclick="callbacksDemo6()" class="secondary">Reset</button>
+      <div class="output" id="callbacks-output"></div>
+      <div class="code-block">
+const callbacks = pluck.Callbacks('once memory');
+callbacks.add(fn1, fn2);
+callbacks.fire('arg1', 'arg2');
+callbacks.remove(fn1);</div>
+    </div>
+
+    <!-- 13. Animation Queue (NEW) -->
+    <h2 id="queue">13. Animation Queue <span class="tag new">NEW in v2.0</span></h2>
+    <div class="demo-section">
+      <div class="demo-title">.queue(), .dequeue(), .clearQueue(), .promise()</div>
+      <div class="demo-box">
+        <div class="box" id="queue-box" style="width: 200px;">Queue Demo Box</div>
+        <div id="queue-status" style="margin-top: 10px;">
+          Queue: <span id="queue-items"></span>
+        </div>
+      </div>
+      <button onclick="queueDemo1()">Add to queue</button>
+      <button onclick="queueDemo2()">Run queue sequence</button>
+      <button onclick="queueDemo3()">Clear queue</button>
+      <button onclick="queueDemo4()">Promise when done</button>
+      <button onclick="queueDemo5()" class="secondary">Reset</button>
+      <div class="output" id="queue-output"></div>
+      <div class="code-block">
+p('#box').queue(function(next) {
+  // do something
+  next(); // continue queue
+}).promise().done(fn);</div>
+    </div>
+
+    <!-- 14. Custom Selectors (NEW) -->
+    <h2 id="selectors">14. Custom Selectors <span class="tag new">NEW in v2.0</span></h2>
+    <div class="demo-section">
+      <div class="demo-title">.filterCustom() - :hidden, :visible, :contains, :input, :checked, etc.</div>
+      <div class="demo-box" id="filter-container">
+        <div class="filter-demo-item">Visible 1</div>
+        <div class="filter-demo-item hidden-item">Hidden 1</div>
+        <div class="filter-demo-item">Contains Hello</div>
+        <div class="filter-demo-item">Visible 2</div>
+        <div class="filter-demo-item hidden-item">Hidden 2</div>
+        <div class="filter-demo-item">Contains World</div>
+        <input type="text" class="filter-demo-item" placeholder="Text input" style="width: auto;">
+        <input type="checkbox" class="filter-demo-item" checked> Checked
+        <input type="checkbox" class="filter-demo-item"> Unchecked
+        <button class="filter-demo-item">Button</button>
+      </div>
+      <button onclick="filterDemo1()">:visible</button>
+      <button onclick="filterDemo2()">:hidden</button>
+      <button onclick="filterDemo3()">:contains('Hello')</button>
+      <button onclick="filterDemo4()">:input</button>
+      <button onclick="filterDemo5()">:checked</button>
+      <button onclick="filterDemo6()">:button</button>
+      <button onclick="filterDemo7()" class="secondary">Reset</button>
+      <div class="output" id="filter-output"></div>
+      <div class="code-block">
+p('.items').filterCustom('visible')
+p('.items').filterCustom('contains', 'text')
+p('input').filterCustom('checked')
+pluck.expr[':'].hidden(element) // direct access</div>
+    </div>
+
+    <!-- 15. Utilities -->
+    <h2 id="utilities">15. Static Utilities</h2>
+    <div class="demo-section">
+      <div class="demo-title">pluck.each(), pluck.extend(), pluck.isArray(), pluck.type(), pluck.Deferred(), etc.</div>
+      <div class="grid" style="grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));">
+        <button onclick="utilDemo1()">each()</button>
+        <button onclick="utilDemo2()">extend()</button>
+        <button onclick="utilDemo3()">isArray()</button>
+        <button onclick="utilDemo4()">type()</button>
+        <button onclick="utilDemo5()">parseHTML()</button>
+        <button onclick="utilDemo6()">uniqueSort()</button>
+        <button onclick="utilDemo7()">escapeSelector()</button>
+        <button onclick="utilDemo8()">hasData()</button>
+        <button onclick="utilDemo9()">now()</button>
+        <button onclick="utilDemo10()">grep()</button>
+      </div>
+      <div class="output" id="util-output"></div>
+    </div>
+
+    <!-- 16. Method Chaining -->
+    <h2>16. Method Chaining</h2>
+    <div class="demo-section">
+      <div class="demo-title">Chain multiple methods together</div>
+      <div class="demo-box">
+        <div class="box" id="chain-box">Chain Demo</div>
+      </div>
+      <button onclick="chainDemo()">Run chained methods</button>
+      <div class="code-block">
+p('#chain-box')
+  .addClass('active')
+  .css('transform', 'scale(1.1)')
+  .html('&lt;b&gt;Chained!&lt;/b&gt;')
+  .fadeOut(500)
+  .delay(500)
+  .fadeIn(500);</div>
+    </div>
+
+    <footer>
+      <div style="display: flex; justify-content: center; align-items: center; gap: 20px; flex-wrap: wrap;">
+        <span>Pluck.js v2.0.0</span>
+        <span style="color: #333;">|</span>
+        <a href="README.md">Documentation</a>
+        <span style="color: #333;">|</span>
+        <a href="https://github.com/saykarim/pluck-js" target="_blank">GitHub</a>
+        <span style="color: #333;">|</span>
+        <a href="LICENSE">MIT License</a>
+      </div>
+      <p style="margin-top: 15px; font-size: 13px;">Created with ❤️ by <a href="https://github.com/saykarim" target="_blank" style="color: var(--accent-primary);">Sayed Abdul Karim</a></p>
+    </footer>
+  </div>
+
+  <script src="pluck.js"></script>
+  <script>
+    // ========== THEME TOGGLE ==========
+    function toggleTheme() {
+      const html = document.documentElement;
+      const currentTheme = html.getAttribute('data-theme');
+      const newTheme = currentTheme === 'light' ? 'dark' : 'light';
+
+      html.setAttribute('data-theme', newTheme);
+      localStorage.setItem('pluck-theme', newTheme);
+
+      // Update icon
+      document.getElementById('theme-icon').textContent = newTheme === 'light' ? '☀️' : '🌙';
+    }
+
+    // Check saved theme on load
+    (function() {
+      const savedTheme = localStorage.getItem('pluck-theme');
+      if (savedTheme) {
+        document.documentElement.setAttribute('data-theme', savedTheme);
+        if (savedTheme === 'light') {
+          document.getElementById('theme-icon').textContent = '☀️';
+        }
+      }
+    })();
+
+    // ========== INSTALL TABS ==========
+    function showInstall(type) {
+      // Hide all
+      document.getElementById('install-cdn').style.display = 'none';
+      document.getElementById('install-npm').style.display = 'none';
+      document.getElementById('install-download').style.display = 'none';
+
+      // Remove active from all tabs
+      document.querySelectorAll('.install-tab').forEach(tab => tab.classList.remove('active'));
+
+      // Show selected
+      document.getElementById('install-' + type).style.display = 'block';
+
+      // Add active to clicked tab
+      event.target.classList.add('active');
+    }
+
+    function copyCode() {
+      const codeBlock = event.target.parentElement;
+      const text = codeBlock.innerText.replace('Copy', '').trim();
+      navigator.clipboard.writeText(text);
+      event.target.textContent = 'Copied!';
+      setTimeout(() => event.target.textContent = 'Copy', 2000);
+    }
+
+    // ========== DEMO FUNCTIONS ==========
+    // Store original states
+    const originalHTML = {
+      domContainer: document.getElementById('dom-container').innerHTML,
+      filterContainer: document.getElementById('filter-container').innerHTML
+    };
+
+    // 1. Selection Demos
+    function selectDemo1() {
+      p('.box').addClass('active');
+      log('select-output', "p('.box').addClass('active')\nAdded 'active' class to all boxes");
+    }
+    function selectDemo2() {
+      p('#box2').toggleClass('highlight');
+      log('select-output', "p('#box2').toggleClass('highlight')\nToggled highlight on box2");
+    }
+    function selectDemo3() {
+      p('.box').first().html('<strong>Changed!</strong>');
+      log('select-output', "p('.box').first().html('<strong>Changed!</strong>')\nChanged first box content");
+    }
+    function selectDemo4() {
+      p('.box').removeClass('active highlight').html(function(i) { return 'Box ' + (i + 1); });
+      log('select-output', 'Reset complete');
+    }
+
+    // 2. DOM Manipulation
+    let itemCounter = 4;
+    function domDemo1() {
+      p('#dom-container').append('<div class="list-item">Item ' + itemCounter++ + ' (appended)</div>');
+    }
+    function domDemo2() {
+      p('#dom-container').prepend('<div class="list-item">Item ' + itemCounter++ + ' (prepended)</div>');
+    }
+    function domDemo3() {
+      p('#item2').before('<div class="list-item">Inserted before Item 2</div>');
+    }
+    function domDemo4() {
+      const cloned = p('#item1').clone();
+      cloned.html('Cloned Item');
+      p('#dom-container').append(cloned);
+    }
+    function domDemo5() {
+      p('#dom-container .list-item').last().remove();
+    }
+    function domDemo6() {
+      document.getElementById('dom-container').innerHTML = originalHTML.domContainer;
+      itemCounter = 4;
+    }
+    function domDemo7() {
+      p('#dom-container .list-item').wrapAll('<div style="border: 2px dashed #6366f1; padding: 10px; border-radius: 8px;"></div>');
+    }
+
+    // 3. CSS Demos
+    function cssDemo1() {
+      p('#style-box').css('background', '#f59e0b');
+      log('css-output', "css('background', '#f59e0b')");
+    }
+    function cssDemo2() {
+      p('#style-box').css('borderRadius', '50px');
+      log('css-output', "css('borderRadius', '50px')");
+    }
+    function cssDemo3() {
+      p('#style-box').css({ background: 'linear-gradient(135deg, #6366f1, #8b5cf6)', padding: '30px', fontSize: '18px' });
+      log('css-output', "css({ background: 'gradient', padding: '30px' })");
+    }
+    function cssDemo4() {
+      const bg = p('#style-box').css('background-color');
+      const pad = p('#style-box').css('padding');
+      log('css-output', 'Background: ' + bg + '\nPadding: ' + pad);
+    }
+    function cssDemo5() {
+      p('#style-box').attr('style', '');
+      log('css-output', 'Styles reset');
+    }
+
+    // 4. Traversing
+    function traverseDemo1() {
+      const children = p('#traverse-parent').children();
+      log('traverse-output', 'Children: ' + children.length + '\n' + children.map((i, el) => el.id || el.className).get().join(', '));
+    }
+    function traverseDemo2() {
+      const parent = p('#child2').parent();
+      log('traverse-output', 'Parent ID: ' + parent.attr('id'));
+    }
+    function traverseDemo3() {
+      const gc = p('#traverse-parent').find('.grandchild');
+      log('traverse-output', 'Found: ' + gc.text());
+    }
+    function traverseDemo4() {
+      const siblings = p('#child2').siblings();
+      log('traverse-output', 'Siblings: ' + siblings.map((i, el) => el.id).get().join(', '));
+    }
+    function traverseDemo5() {
+      const closest = p('.grandchild').closest('.parent');
+      log('traverse-output', 'Closest .parent: #' + closest.attr('id'));
+    }
+    function traverseDemo6() {
+      const next = p('#child1').next();
+      const prev = p('#child3').prev();
+      log('traverse-output', 'Next of child1: ' + next.attr('id') + '\nPrev of child3: ' + prev.attr('id'));
+    }
+
+    // 5. Events
+    function eventDemo1() {
+      p('#event-btn1').on('click', function() { logEvent('Button 1 clicked!'); });
+      p('#event-input').on('input', function() { logEvent('Input: ' + this.value); });
+      logEvent('Click event attached');
+    }
+    function eventDemo2() {
+      p('#event-btn2').hover(
+        function() { p(this).css('background', '#10b981'); logEvent('Hover in'); },
+        function() { p(this).css('background', ''); logEvent('Hover out'); }
+      );
+      logEvent('Hover event attached');
+    }
+    function eventDemo3() {
+      p('#event-btn3').one('click', function() { logEvent('ONE-TIME click fired!'); });
+      logEvent('.one() attached - will fire only once');
+    }
+    function eventDemo4() {
+      p('#event-btn1').trigger('click');
+    }
+    function eventDemo5() {
+      p('#event-btn1, #event-btn2, #event-btn3, #event-input').off();
+      logEvent('All events removed');
+    }
+    function logEvent(msg) {
+      const el = document.getElementById('event-log');
+      el.innerHTML = '[' + new Date().toLocaleTimeString() + '] ' + msg + '\n' + el.innerHTML;
+    }
+
+    // 6. Effects
+    function effectDemo1() { p('#show-hide-box').hide(); }
+    function effectDemo2() { p('#show-hide-box').show(); }
+    function effectDemo3() { p('#show-hide-box').toggle(); }
+    function effectDemo4() { p('#show-hide-box').hide(500); }
+    function effectDemo5() { p('#show-hide-box').show(500); }
+    function fadeDemo1() { p('#fade-box').fadeOut(); }
+    function fadeDemo2() { p('#fade-box').fadeIn(); }
+    function fadeDemo3() { p('#fade-box').fadeToggle(); }
+    function fadeDemo4() { p('#fade-box').fadeTo(400, 0.5); }
+    function slideDemo1() { p('#slide-box').slideUp(); }
+    function slideDemo2() { p('#slide-box').slideDown(); }
+    function slideDemo3() { p('#slide-box').slideToggle(); }
+    function animateDemo1() { p('#animate-box').animate({ left: '200px' }, 500); }
+    function animateDemo2() { p('#animate-box').animate({ left: '100px', width: '150px', height: '150px', opacity: 0.7 }, 800); }
+    function animateDemo3() { p('#animate-box').animate({ left: '0px', width: '100px', height: '100px', opacity: 1 }, 500); }
+    function animateDemo4() { p('#animate-box').stop(); }
+
+    // 7. Attributes
+    function attrDemo1() {
+      log('attr-output', 'data-info: ' + p('#attr-input').data('info'));
+    }
+    function attrDemo2() {
+      p('#attr-input').attr('title', 'Tooltip!');
+      log('attr-output', 'Added title attribute');
+    }
+    function attrDemo3() {
+      log('attr-output', 'Checkbox checked: ' + p('#attr-checkbox').prop('checked'));
+    }
+    function attrDemo4() {
+      p('#attr-input').val('New value!');
+      log('attr-output', 'Value set');
+    }
+    function attrDemo5() {
+      p('#attr-input').data('custom', { name: 'John', age: 25 });
+      log('attr-output', 'Stored: ' + JSON.stringify(p('#attr-input').data('custom')));
+    }
+    function attrDemo6() {
+      log('attr-output', 'All data: ' + JSON.stringify(p('#attr-input').data()));
+    }
+
+    // 8. Dimensions
+    function dimDemo1() {
+      const el = p('#dimension-box');
+      log('dim-output', 'Width: ' + el.width() + 'px\nHeight: ' + el.height() + 'px');
+    }
+    function dimDemo2() {
+      const offset = p('#dimension-box').offset();
+      log('dim-output', 'Offset - Top: ' + Math.round(offset.top) + ', Left: ' + Math.round(offset.left));
+    }
+    function dimDemo3() {
+      const pos = p('#dimension-box').position();
+      log('dim-output', 'Position - Top: ' + pos.top + ', Left: ' + pos.left);
+    }
+    function dimDemo4() {
+      const el = p('#dimension-box');
+      log('dim-output', 'Outer W: ' + el.outerWidth() + ', Outer H: ' + el.outerHeight() + '\nWith margin: ' + el.outerWidth(true) + ' x ' + el.outerHeight(true));
+    }
+    function dimDemo5() {
+      p('#scroll-container').scrollTop(100);
+      log('dim-output', 'Scrolled to 100px');
+    }
+
+    // 9. Forms
+    function formDemo1() {
+      log('form-output', p('#demo-form').serialize());
+    }
+    function formDemo2() {
+      log('form-output', JSON.stringify(p('#demo-form').serializeArray(), null, 2));
+    }
+    function formDemo3() {
+      log('form-output', 'Username: ' + p('[name="username"]').val() + '\nEmail: ' + p('[name="email"]').val() + '\nCountry: ' + p('[name="country"]').val());
+    }
+
+    // 10. AJAX
+    function ajaxDemo1() {
+      log('ajax-output', 'Calling pluck.ajax() GET...');
+      pluck.ajax({
+        url: 'https://jsonplaceholder.typicode.com/posts/1',
+        method: 'GET',
+        dataType: 'json',
+        success: function(data) {
+          log('ajax-output', 'SUCCESS!\n\nTitle: ' + data.title + '\n\nBody: ' + data.body.substring(0, 100) + '...');
+        },
+        error: function(xhr, status, error) {
+          log('ajax-output', 'ERROR: ' + error);
+        }
+      });
+    }
+
+    function ajaxDemo2() {
+      log('ajax-output', 'Calling pluck.get()...');
+      pluck.get('https://jsonplaceholder.typicode.com/users/1', function(data) {
+        log('ajax-output', 'SUCCESS!\n\nName: ' + data.name + '\nEmail: ' + data.email + '\nPhone: ' + data.phone);
+      }, 'json');
+    }
+
+    function ajaxDemo3() {
+      log('ajax-output', 'Calling pluck.post()...');
+      pluck.post('https://jsonplaceholder.typicode.com/posts', { title: 'Test Post', body: 'This is a test', userId: 1 }, function(data) {
+        log('ajax-output', 'POST SUCCESS!\n\nCreated Post ID: ' + data.id + '\nTitle: ' + data.title);
+      }, 'json');
+    }
+
+    function ajaxDemo4() {
+      log('ajax-output', 'Calling pluck.getJSON()...');
+      pluck.getJSON('https://jsonplaceholder.typicode.com/todos/1', function(data) {
+        log('ajax-output', 'SUCCESS!\n\nTodo ID: ' + data.id + '\nTitle: ' + data.title + '\nCompleted: ' + data.completed);
+      });
+    }
+
+    function ajaxDemo5() {
+      log('ajax-output', '.load() loads HTML into element.\n\nExample:\np("#container").load("/partial.html");\n\n(Demo skipped - no HTML file to load)');
+    }
+
+    function ajaxDemo6() {
+      pluck.ajaxSetup({
+        timeout: 5000,
+        headers: { 'X-Custom-Header': 'test' }
+      });
+      log('ajax-output', 'ajaxSetup() sets defaults for all AJAX calls:\n\npluck.ajaxSetup({\n  timeout: 5000,\n  headers: { "X-Custom-Header": "test" }\n});\n\nNow all AJAX calls use these defaults.');
+    }
+
+    // 11. Deferred
+    function deferredDemo1() {
+      const d = pluck.Deferred();
+
+      d.done(function(val) {
+        log('deferred-output', 'DONE: ' + val);
+        document.getElementById('deferred-status').textContent = 'Resolved!';
+        document.getElementById('deferred-status').style.color = '#10b981';
+      });
+
+      d.always(function() {
+        log('deferred-output', log('deferred-output').textContent + '\nALWAYS callback fired');
+      });
+
+      document.getElementById('deferred-status').textContent = 'Resolving...';
+      document.getElementById('deferred-progress').style.width = '100%';
+
+      setTimeout(() => d.resolve('Success!'), 500);
+      log('deferred-output', 'Created Deferred, resolving in 500ms...');
+    }
+
+    function deferredDemo2() {
+      const d = pluck.Deferred();
+
+      d.fail(function(err) {
+        log('deferred-output', 'FAIL: ' + err);
+        document.getElementById('deferred-status').textContent = 'Rejected!';
+        document.getElementById('deferred-status').style.color = '#ef4444';
+      });
+
+      document.getElementById('deferred-progress').style.width = '50%';
+      document.getElementById('deferred-progress').style.background = '#ef4444';
+
+      setTimeout(() => d.reject('Error occurred!'), 500);
+      log('deferred-output', 'Created Deferred, rejecting in 500ms...');
+    }
+
+    function deferredDemo3() {
+      const d = pluck.Deferred();
+      let progress = 0;
+
+      d.progress(function(val) {
+        document.getElementById('deferred-progress').style.width = val + '%';
+        document.getElementById('deferred-status').textContent = 'Progress: ' + val + '%';
+      });
+
+      d.done(function() {
+        document.getElementById('deferred-status').textContent = 'Complete!';
+        document.getElementById('deferred-status').style.color = '#10b981';
+        log('deferred-output', 'Progress complete!');
+      });
+
+      const interval = setInterval(() => {
+        progress += 10;
+        d.notify(progress);
+        if (progress >= 100) {
+          clearInterval(interval);
+          d.resolve();
+        }
+      }, 200);
+
+      log('deferred-output', 'Progress demo started...');
+    }
+
+    function deferredDemo4() {
+      const d1 = pluck.Deferred();
+      const d2 = pluck.Deferred();
+      const d3 = pluck.Deferred();
+
+      pluck.when(d1, d2, d3).done(function(r1, r2, r3) {
+        log('deferred-output', 'ALL RESOLVED:\n- d1: ' + r1 + '\n- d2: ' + r2 + '\n- d3: ' + r3);
+        document.getElementById('deferred-status').textContent = 'All 3 resolved!';
+      });
+
+      setTimeout(() => { d1.resolve('First'); log('deferred-output', 'd1 resolved'); }, 300);
+      setTimeout(() => { d2.resolve('Second'); log('deferred-output', 'd2 resolved'); }, 600);
+      setTimeout(() => { d3.resolve('Third'); log('deferred-output', 'd3 resolved'); }, 900);
+
+      log('deferred-output', 'Waiting for 3 deferreds...');
+    }
+
+    function deferredDemo5() {
+      const d = pluck.Deferred();
+
+      d.promise()
+        .then(function(val) {
+          log('deferred-output', 'Then 1: ' + val);
+          return val + ' -> chained';
+        })
+        .then(function(val) {
+          log('deferred-output', 'Then 2: ' + val);
+          return val + ' -> again';
+        })
+        .then(function(val) {
+          log('deferred-output', 'Then 3: ' + val);
+          document.getElementById('deferred-status').textContent = 'Promise chain complete!';
+        });
+
+      setTimeout(() => d.resolve('Start'), 300);
+      log('deferred-output', 'Promise chain demo...');
+    }
+
+    // 12. Callbacks
+    let currentCallbacks = null;
+
+    function callbacksDemo1() {
+      currentCallbacks = pluck.Callbacks();
+
+      currentCallbacks.add(function(msg) {
+        addCallbackResult('Callback 1: ' + (msg || 'fired'));
+      });
+      currentCallbacks.add(function(msg) {
+        addCallbackResult('Callback 2: ' + (msg || 'fired'));
+      });
+
+      log('callbacks-output', 'Created Callbacks and added 2 functions');
+    }
+
+    function callbacksDemo2() {
+      if (!currentCallbacks) { callbacksDemo1(); }
+      document.getElementById('callbacks-list').innerHTML = '';
+      currentCallbacks.fire();
+      log('callbacks-output', 'Fired callbacks without arguments');
+    }
+
+    function callbacksDemo3() {
+      if (!currentCallbacks) { callbacksDemo1(); }
+      document.getElementById('callbacks-list').innerHTML = '';
+      currentCallbacks.fire('Hello World!');
+      log('callbacks-output', "Fired with argument: 'Hello World!'");
+    }
+
+    function callbacksDemo4() {
+      const once = pluck.Callbacks('once');
+      document.getElementById('callbacks-list').innerHTML = '';
+
+      once.add(function() { addCallbackResult('Once callback fired'); });
+
+      once.fire();
+      once.fire();
+      once.fire();
+
+      log('callbacks-output', 'Created "once" callbacks - fired 3 times but only executed once');
+    }
+
+    function callbacksDemo5() {
+      const memory = pluck.Callbacks('memory');
+      document.getElementById('callbacks-list').innerHTML = '';
+
+      memory.add(function(msg) { addCallbackResult('First: ' + msg); });
+      memory.fire('remembered');
+
+      // Added after fire - still gets called with remembered args
+      memory.add(function(msg) { addCallbackResult('Added later: ' + msg); });
+
+      log('callbacks-output', '"memory" flag - callback added AFTER fire still receives last arguments');
+    }
+
+    function callbacksDemo6() {
+      currentCallbacks = null;
+      document.getElementById('callbacks-list').innerHTML = 'Callbacks will execute here...';
+      log('callbacks-output', 'Reset');
+    }
+
+    function addCallbackResult(text) {
+      const el = document.getElementById('callbacks-list');
+      if (el.textContent === 'Callbacks will execute here...') el.innerHTML = '';
+      el.innerHTML += '<div class="tag" style="margin: 3px;">' + text + '</div>';
+    }
+
+    // 13. Queue
+    let queueCount = 0;
+
+    function queueDemo1() {
+      const box = p('#queue-box');
+
+      box.queue(function(next) {
+        log('queue-output', 'Queue item ' + (++queueCount) + ' added');
+        updateQueueDisplay();
+        next();
+      });
+
+      updateQueueDisplay();
+      log('queue-output', 'Added function to queue. Queue length: ' + box.queue().length);
+    }
+
+    function queueDemo2() {
+      queueCount = 0;
+      const box = p('#queue-box');
+
+      box.queue(function(next) {
+        log('queue-output', 'Step 1: Adding class');
+        box.addClass('active');
+        setTimeout(next, 500);
+      });
+
+      box.queue(function(next) {
+        log('queue-output', 'Step 2: Changing text');
+        box.html('<b>Queued!</b>');
+        setTimeout(next, 500);
+      });
+
+      box.queue(function(next) {
+        log('queue-output', 'Step 3: Scaling');
+        box.css('transform', 'scale(1.1)');
+        setTimeout(next, 500);
+      });
+
+      box.queue(function(next) {
+        log('queue-output', 'Step 4: Complete!');
+        next();
+      });
+
+      updateQueueDisplay();
+      log('queue-output', 'Queue sequence started...');
+    }
+
+    function queueDemo3() {
+      p('#queue-box').clearQueue();
+      updateQueueDisplay();
+      log('queue-output', 'Queue cleared');
+    }
+
+    function queueDemo4() {
+      const box = p('#queue-box');
+
+      box.fadeOut(300).fadeIn(300).promise().done(function() {
+        log('queue-output', 'Promise resolved - animations complete!');
+        document.getElementById('queue-status').innerHTML = 'Queue: <span style="color: #10b981;">Promise resolved!</span>';
+      });
+
+      log('queue-output', 'Started animations with promise...');
+    }
+
+    function queueDemo5() {
+      p('#queue-box')
+        .removeClass('active')
+        .css({ transform: '', background: '' })
+        .html('Queue Demo Box');
+      queueCount = 0;
+      updateQueueDisplay();
+      log('queue-output', 'Reset');
+    }
+
+    function updateQueueDisplay() {
+      const len = p('#queue-box').queue().length;
+      let html = '';
+      for (let i = 0; i < len; i++) {
+        html += '<span class="queue-item">Item ' + (i + 1) + '</span>';
+      }
+      document.getElementById('queue-items').innerHTML = html || '<span style="color: #888;">Empty</span>';
+    }
+
+    // 14. Custom Selectors
+    function filterDemo1() {
+      resetFilterDemo();
+      const visible = p('#filter-container .filter-demo-item').filterCustom('visible');
+      visible.each(function() { p(this).addClass('matched'); });
+      log('filter-output', 'Found ' + visible.length + ' visible elements');
+    }
+
+    function filterDemo2() {
+      resetFilterDemo();
+      const hidden = p('#filter-container .filter-demo-item').filterCustom('hidden');
+      log('filter-output', 'Found ' + hidden.length + ' hidden elements\n(They are hidden so you cant see them highlighted)');
+    }
+
+    function filterDemo3() {
+      resetFilterDemo();
+      const contains = p('#filter-container .filter-demo-item').filterCustom('contains', 'Hello');
+      contains.each(function() { p(this).addClass('matched'); });
+      log('filter-output', 'Found ' + contains.length + " elements containing 'Hello'");
+    }
+
+    function filterDemo4() {
+      resetFilterDemo();
+      const inputs = p('#filter-container').find('*').filterCustom('input');
+      inputs.each(function() { p(this).addClass('matched'); });
+      log('filter-output', 'Found ' + inputs.length + ' input elements (input, select, textarea, button)');
+    }
+
+    function filterDemo5() {
+      resetFilterDemo();
+      const checked = p('#filter-container input').filterCustom('checked');
+      checked.each(function() { p(this).parent().addClass('matched'); });
+      log('filter-output', 'Found ' + checked.length + ' checked inputs');
+    }
+
+    function filterDemo6() {
+      resetFilterDemo();
+      const buttons = p('#filter-container').find('*').filterCustom('button');
+      buttons.each(function() { p(this).addClass('matched'); });
+      log('filter-output', 'Found ' + buttons.length + ' buttons');
+    }
+
+    function filterDemo7() {
+      resetFilterDemo();
+      log('filter-output', 'Reset');
+    }
+
+    function resetFilterDemo() {
+      p('#filter-container .filter-demo-item').removeClass('matched');
+    }
+
+    // 15. Utilities
+    function utilDemo1() {
+      let result = [];
+      pluck.each([1, 2, 3, 4, 5], function(i, val) { result.push(val * 2); });
+      log('util-output', 'pluck.each([1,2,3,4,5], fn)\nResult: [' + result.join(', ') + ']');
+    }
+    function utilDemo2() {
+      const merged = pluck.extend({}, { a: 1, b: 2 }, { b: 3, c: 4 });
+      log('util-output', 'pluck.extend({}, {a:1,b:2}, {b:3,c:4})\nResult: ' + JSON.stringify(merged));
+    }
+    function utilDemo3() {
+      log('util-output', 'pluck.isArray([1,2,3]): ' + pluck.isArray([1,2,3]) + '\npluck.isArray("str"): ' + pluck.isArray("str") + '\npluck.isFunction(fn): ' + pluck.isFunction(function(){}));
+    }
+    function utilDemo4() {
+      log('util-output', 'pluck.type([]): ' + pluck.type([]) + '\npluck.type({}): ' + pluck.type({}) + '\npluck.type(null): ' + pluck.type(null) + '\npluck.type(123): ' + pluck.type(123));
+    }
+    function utilDemo5() {
+      const nodes = pluck.parseHTML('<div class="test">Hello</div><span>World</span>');
+      log('util-output', 'Parsed ' + nodes.length + ' nodes:\n' + nodes.map(n => n.outerHTML || n.textContent).join('\n'));
+    }
+    function utilDemo6() {
+      const arr = [3, 1, 2, 1, 3, 2];
+      log('util-output', 'Original: [' + arr.join(',') + ']\npluck.uniqueSort() removes duplicates');
+    }
+    function utilDemo7() {
+      const escaped = pluck.escapeSelector('[name="test"]');
+      log('util-output', 'pluck.escapeSelector(\'[name="test"]\')\nResult: ' + escaped);
+    }
+    function utilDemo8() {
+      p('#attr-input').data('test', 'value');
+      const has = pluck.hasData(document.getElementById('attr-input'));
+      log('util-output', 'pluck.hasData(element): ' + has);
+    }
+    function utilDemo9() {
+      log('util-output', 'pluck.now(): ' + pluck.now() + '\n(Current timestamp in ms)');
+    }
+    function utilDemo10() {
+      const arr = [1, 2, 3, 4, 5, 6];
+      const evens = pluck.grep(arr, function(n) { return n % 2 === 0; });
+      log('util-output', 'pluck.grep([1,2,3,4,5,6], isEven)\nResult: [' + evens.join(', ') + ']');
+    }
+
+    // Chain Demo
+    function chainDemo() {
+      p('#chain-box')
+        .addClass('active')
+        .css('transform', 'scale(1.1)')
+        .html('<b>Chained!</b>')
+        .fadeOut(500)
+        .delay(500)
+        .fadeIn(500);
+
+      setTimeout(() => {
+        p('#chain-box').removeClass('active').css('transform', '').html('Chain Demo');
+      }, 2000);
+    }
+
+    // Helper
+    function log(id, msg) {
+      const el = document.getElementById(id);
+      el.textContent = msg;
+      return el;
+    }
+
+    // Init
+    p(function() {
+      console.log('Pluck.js v' + pluck.version + ' loaded!');
+      document.getElementById('deferred-progress').style.background = 'linear-gradient(90deg, #6366f1, #8b5cf6)';
+    });
+  </script>
+</body>
+</html>
