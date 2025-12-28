@@ -17,7 +17,7 @@
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/saykarim/pluck-js.git"
+    "url": "git+https://github.com/sayedabdulkarim/pluck.git"
   },
   "keywords": [
     "jquery",
@@ -34,9 +34,9 @@
   "author": "Sayed Abdul Karim",
   "license": "MIT",
   "bugs": {
-    "url": "https://github.com/saykarim/pluck-js/issues"
+    "url": "https://github.com/sayedabdulkarim/pluck/issues"
   },
-  "homepage": "https://github.com/saykarim/pluck-js#readme",
+  "homepage": "https://github.com/sayedabdulkarim/pluck#readme",
   "devDependencies": {
     "terser": "^5.44.1"
   }

@@ -53,7 +53,7 @@ import pluck from 'pluck-dom';
 
 ### Download
 
-Download `pluck.min.js` from [GitHub Releases](https://github.com/saykarim/pluck-js/releases) and include it:
+Download `pluck.min.js` from [GitHub Releases](https://github.com/sayedabdulkarim/pluck/releases) and include it:
 
 ```html
 <script src="pluck.min.js"></script>
@@ -1181,4 +1181,4 @@ MIT License - Sayed Abdul Karim
 
 ---
 
-Created with ❤️ by **[Sayed Abdul Karim](https://github.com/saykarim)**
+Created with ❤️ by **[Sayed Abdul Karim](https://github.com/sayedabdulkarim)**
